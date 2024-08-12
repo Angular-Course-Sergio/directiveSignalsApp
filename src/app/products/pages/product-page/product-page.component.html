@@ -10,8 +10,8 @@
       <input type="text" class="form-control" formControlName="name" />
     </div>
     <div class="col-auto">
-      <span customLabel
-      [color]="color">Temporal</span>
+      <span customLabel [color]="color" [errors]="myForm.get('name')?.errors">
+      </span>
     </div>
   </div>
 
