@@ -1,4 +1,4 @@
-import { Component, computed, signal } from '@angular/core';
+import { Component, computed, effect, signal } from '@angular/core';
 import { User } from '../../interfaces';
 
 @Component({
@@ -14,28 +14,40 @@ export class PropertiesPageComponent {
     avatar: 'https://reqres.in/img/faces/2-image.jpg',
   });
 
-  public fullName = computed(
+  public counter = signal(10);
+
+  public fullName = computed<string>(
     () => `${this.user().first_name} ${this.user().last_name}`
   );
 
+  public userChangeEffect = effect(() => {
+    console.log(`${this.user().first_name} - ${this.counter()}`);
+  });
+
   onFieldUpdated(field: keyof User, value: string) {
     this.user.update((current) => {
+      const updateUser = { ...current };
+
       switch (field) {
         case 'email':
-          current.email = value;
+          updateUser.email = value;
           break;
         case 'first_name':
-          current.first_name = value;
+          updateUser.first_name = value;
           break;
         case 'last_name':
-          current.last_name = value;
+          updateUser.last_name = value;
           break;
         case 'avatar':
-          current.avatar = value;
+          updateUser.avatar = value;
           break;
       }
 
-      return current;
+      return updateUser;
     });
+  }
+
+  increaseBy(value: number) {
+    this.counter.update((current) => current + value);
   }
 }
